@@ -19,11 +19,10 @@ func main() {
 	h1 := func(w http.ResponseWriter, _ *http.Request) {
 		io.WriteString(w, retStr)
 	}
-	h2 := func(w http.ResponseWriter, _ *http.Request) {
-		io.WriteString(w, "Hello world!\n")
-	}
+	// h2 := func(w http.ResponseWriter, _ *http.Request) {
+	// 	io.WriteString(w, "Hello world!\n")
+	// }
 	h3 := func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "Hello world!\n")
 
 		conn, err := upgrader.Upgrade(w, r, nil)
 		defer conn.Close()
@@ -47,9 +46,8 @@ func main() {
 			}
 		}
 	}
-
-	http.HandleFunc("/", h1)
-	http.HandleFunc("/endpoint", h2)
+	http.Handle("/", http.FileServer(http.Dir("static")))
+	http.HandleFunc("/endpoint", h1)
 	http.HandleFunc("/ws", h3)
 
 	port := "8080"
